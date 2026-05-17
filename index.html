@@ -3,740 +3,1077 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حلول الامتحانات – قواعد البيانات العلائقية 2025-2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<title>المتغيرات العشوائية — المحاضرة 3</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
 <style>
-:root{
-  --bg:#0d1117;--bg2:#161b22;--bg3:#21262d;
-  --border:#30363d;--text:#e6edf3;--text2:#8b949e;
-  --gold:#fbbf24;--blue:#58a6ff;--green:#3fb950;
-  --red:#f85149;--orange:#ffa657;--accent:#1f6feb;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);direction:rtl;line-height:1.7;min-height:100vh}
+  :root {
+    --gold: #c9a227; --gold-light: #f0c94a; --gold-dark: #8a6d0d;
+    --navy: #0e1628; --navy-mid: #1a2744; --navy-light: #253560;
+    --cream: #fdf6e3; --text: #e8dcc8;
+    --accent: #4a9eff; --red: #e05a5a; --green: #4caf84;
+    --purple: #a78bfa; --orange: #fb923c;
+    --border: rgba(201,162,39,0.25);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Cairo', sans-serif; background: var(--navy); color: var(--text); min-height: 100vh; overflow-x: hidden; }
 
-/* ─── HEADER ─── */
-header{
-  background:linear-gradient(135deg,#0a0f1a 0%,#1a2744 50%,#0a0f1a 100%);
-  border-bottom:2px solid var(--gold);padding:2rem 1.5rem;text-align:center;
-  position:relative;overflow:hidden
-}
-header::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% -20%,rgba(251,191,36,.12) 0%,transparent 65%)
-}
-header h1{font-size:clamp(1.4rem,4vw,2.4rem);font-weight:800;color:var(--gold);position:relative;text-shadow:0 0 40px rgba(251,191,36,.4)}
-header p{color:var(--text2);margin-top:.4rem;font-size:.95rem;position:relative}
-.header-meta{display:flex;gap:1rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
-.meta-chip{background:rgba(255,255,255,.05);border:1px solid var(--border);padding:.3rem .9rem;border-radius:20px;font-size:.8rem;color:var(--text2)}
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy) 100%);
+    border-bottom: 2px solid var(--gold); padding: 36px 20px 28px; text-align: center; position: relative; overflow: hidden;
+  }
+  header::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse at 50% 0%, rgba(201,162,39,0.12) 0%, transparent 70%); }
+  .header-badge { display:inline-block; background:rgba(201,162,39,0.15); border:1px solid var(--gold); color:var(--gold-light); font-size:.75rem; letter-spacing:3px; padding:6px 20px; border-radius:2px; margin-bottom:14px; }
+  header h1 { font-family:'Amiri',serif; font-size:clamp(1.6rem,4.5vw,2.8rem); color:var(--gold-light); font-weight:700; line-height:1.3; position:relative; }
+  header p { margin-top:8px; color:rgba(232,220,200,0.6); font-size:.88rem; position:relative; }
 
-/* ─── NAVIGATION ─── */
-nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:.75rem 1rem;position:sticky;top:0;z-index:100}
-.tabs{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center}
-.tab{
-  padding:.55rem 1.1rem;border:1px solid var(--border);border-radius:8px;
-  background:var(--bg3);color:var(--text2);cursor:pointer;
-  font-family:'Tajawal',sans-serif;font-size:.88rem;font-weight:500;
-  transition:all .2s;white-space:nowrap;user-select:none
-}
-.tab:hover{border-color:var(--gold);color:var(--gold);background:rgba(251,191,36,.07)}
-.tab.active{background:var(--accent);border-color:var(--blue);color:#fff;font-weight:700;box-shadow:0 0 16px rgba(31,111,235,.35)}
+  nav { background:var(--navy-mid); border-bottom:1px solid var(--border); padding:0 12px; display:flex; gap:2px; overflow-x:auto; scrollbar-width:none; position:sticky; top:0; z-index:100; }
+  nav::-webkit-scrollbar { display:none; }
+  .nav-btn { flex-shrink:0; background:none; border:none; color:rgba(232,220,200,0.5); font-family:'Cairo',sans-serif; font-size:.8rem; padding:13px 14px; cursor:pointer; border-bottom:2px solid transparent; transition:all .25s; white-space:nowrap; }
+  .nav-btn:hover { color:var(--gold-light); }
+  .nav-btn.active { color:var(--gold-light); border-bottom-color:var(--gold); }
 
-/* ─── SECTIONS ─── */
-.section{display:none;padding:1.75rem 1.25rem;max-width:1080px;margin:0 auto;animation:fadeUp .3s ease}
-.section.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  main { max-width:900px; margin:0 auto; padding:28px 14px 60px; }
+  .section { display:none; animation:fadeIn .4s ease; }
+  .section.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
 
-.sec-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:2px solid var(--border)}
-.sec-header h2{font-size:1.35rem;font-weight:800}
-.sec-badge{background:linear-gradient(135deg,var(--gold),#f97316);color:#000;padding:.25rem .8rem;border-radius:20px;font-size:.78rem;font-weight:800}
+  .card { background:var(--navy-mid); border:1px solid var(--border); border-radius:12px; margin-bottom:22px; overflow:hidden; transition:border-color .2s; }
+  .card:hover { border-color:rgba(201,162,39,0.5); }
+  .card-header { background:linear-gradient(90deg,rgba(201,162,39,0.12),transparent); border-bottom:1px solid var(--border); padding:16px 20px; display:flex; align-items:center; gap:12px; }
+  .card-icon { width:36px; height:36px; background:rgba(201,162,39,0.15); border:1px solid var(--gold); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+  .card-title { font-size:1rem; font-weight:700; color:var(--gold-light); }
+  .card-subtitle { font-size:.76rem; color:rgba(232,220,200,0.5); margin-top:2px; }
+  .card-body { padding:20px; }
 
-/* ─── QUESTION CARD ─── */
-.qcard{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.75rem}
-.qtitle{font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem}
-.qnum{background:var(--accent);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;flex-shrink:0}
+  .law-box { background:rgba(74,158,255,0.06); border:1px solid rgba(74,158,255,0.25); border-radius:8px; padding:14px 18px; margin:12px 0; }
+  .law-box .law-label { font-size:.7rem; letter-spacing:2px; color:var(--accent); text-transform:uppercase; margin-bottom:7px; font-weight:600; }
+  .law-box .formula { font-size:.95rem; color:#fff; line-height:2; direction:ltr; text-align:center; }
 
-/* ─── TRUE/FALSE TABLE ─── */
-.tf-wrap{overflow-x:auto}
-table.tf{width:100%;border-collapse:collapse;font-size:.92rem}
-table.tf th{background:var(--bg3);padding:.65rem 1rem;text-align:right;border:1px solid var(--border);color:var(--text2);font-weight:600;white-space:nowrap}
-table.tf td{padding:.65rem 1rem;border:1px solid var(--border);vertical-align:top;line-height:1.6}
-table.tf tr:nth-child(even) td{background:rgba(255,255,255,.025)}
-.badge-ok{display:inline-flex;align-items:center;gap:.25rem;background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.4);padding:.15rem .55rem;border-radius:20px;font-weight:700;font-size:.82rem;white-space:nowrap}
-.badge-no{display:inline-flex;align-items:center;gap:.25rem;background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.4);padding:.15rem .55rem;border-radius:20px;font-weight:700;font-size:.82rem;white-space:nowrap}
-.reason{font-size:.83rem;color:var(--text2);margin-top:.3rem;font-style:italic}
+  .when-box { background:rgba(76,175,132,0.07); border-right:3px solid var(--green); border-radius:0 8px 8px 0; padding:11px 15px; margin:11px 0; font-size:.86rem; line-height:1.7; color:rgba(232,220,200,0.85); }
+  .when-box strong { color:var(--green); display:block; margin-bottom:3px; font-size:.78rem; letter-spacing:1px; }
 
-/* ─── CODE ─── */
-.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.4rem;font-family:'Fira Code',monospace;font-size:.9rem;direction:ltr;text-align:left;overflow-x:auto;line-height:1.9;position:relative}
-.kw{color:#ff7b72}.fn{color:#d2a8ff}.tbl{color:#ffa657}.col{color:#e6edf3}.cmt{color:#6e7681;font-style:italic}.str{color:#a5d6ff}
-.copy-btn{position:absolute;top:.6rem;left:.6rem;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:.2rem .6rem;border-radius:6px;font-size:.78rem;cursor:pointer;font-family:'Tajawal',sans-serif;transition:all .2s}
-.copy-btn:hover{border-color:var(--gold);color:var(--gold)}
+  .warn-box { background:rgba(224,90,90,0.08); border:1px solid rgba(224,90,90,0.25); border-radius:8px; padding:13px 17px; margin:12px 0; }
+  .warn-box .warn-label { color:var(--red); font-size:.78rem; letter-spacing:1px; font-weight:700; margin-bottom:5px; }
 
-/* ─── RESULT TABLE ─── */
-.rtbl-wrap{overflow-x:auto;margin-top:1rem}
-table.rtbl{border-collapse:collapse;font-family:'Fira Code',monospace;font-size:.88rem;direction:ltr;text-align:left}
-table.rtbl th{background:var(--accent);color:#fff;padding:.5rem 1rem;border:1px solid var(--border)}
-table.rtbl td{padding:.45rem 1rem;border:1px solid var(--border);background:var(--bg3)}
-table.rtbl tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+  .info-box { background:rgba(167,139,250,0.07); border:1px solid rgba(167,139,250,0.25); border-radius:8px; padding:13px 17px; margin:12px 0; }
+  .info-box .info-label { color:var(--purple); font-size:.78rem; letter-spacing:1px; font-weight:700; margin-bottom:5px; }
 
-/* ─── SCHEMA BOXES ─── */
-.schema-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
-.sbox{background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.sbox-head{background:var(--accent);color:#fff;padding:.45rem 1rem;font-weight:700;font-family:'Fira Code',monospace;font-size:.9rem;text-align:left;direction:ltr}
-.sbox-rows{padding:.5rem 0;direction:ltr;text-align:left}
-.srow{display:flex;align-items:center;gap:.5rem;padding:.3rem 1rem;font-family:'Fira Code',monospace;font-size:.85rem;border-bottom:1px solid rgba(48,54,61,.5)}
-.srow:last-child{border-bottom:none}
-.pk{background:rgba(251,191,36,.15);color:var(--gold);border:1px solid rgba(251,191,36,.3);padding:.08rem .4rem;border-radius:4px;font-size:.72rem;font-weight:700}
-.fk{background:rgba(88,166,255,.15);color:var(--blue);border:1px solid rgba(88,166,255,.3);padding:.08rem .4rem;border-radius:4px;font-size:.72rem;font-weight:700}
-.mv{background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.3);padding:.08rem .4rem;border-radius:4px;font-size:.72rem;font-weight:700}
+  .type-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:14px 0; }
+  .type-card { background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:10px; padding:16px; }
+  .type-card .type-title { font-size:.9rem; font-weight:700; margin-bottom:8px; }
+  .type-card p { font-size:.82rem; line-height:1.7; color:rgba(232,220,200,0.8); }
+  .type-card.disc .type-title { color:var(--accent); }
+  .type-card.cont .type-title { color:var(--green); }
+  .type-card.mixed .type-title { color:var(--purple); }
 
-/* ─── DIAGRAM SVG WRAPPER ─── */
-.diagram{background:#fff;border-radius:10px;padding:.75rem;margin-top:1rem;overflow-x:auto;box-shadow:0 2px 16px rgba(0,0,0,.3)}
-.diagram svg{width:100%;height:auto;max-width:100%;display:block}
+  .prop-item { display:flex; gap:12px; margin-bottom:14px; align-items:flex-start; }
+  .prop-num { min-width:32px; height:32px; background:var(--gold-dark); color:var(--cream); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.82rem; flex-shrink:0; margin-top:2px; }
+  .prop-content { flex:1; font-size:.88rem; line-height:1.8; color:rgba(232,220,200,0.85); }
 
-/* ─── INFO BOX ─── */
-.info{background:rgba(31,111,235,.1);border:1px solid rgba(88,166,255,.25);border-radius:8px;padding:.9rem 1.1rem;margin-top:.9rem;font-size:.92rem}
-.info strong{color:var(--blue)}
+  .solution-toggle { background:rgba(201,162,39,0.1); border:1px solid var(--gold-dark); color:var(--gold-light); font-family:'Cairo',sans-serif; font-size:.83rem; padding:9px 20px; border-radius:6px; cursor:pointer; transition:all .2s; margin-bottom:13px; display:flex; align-items:center; gap:8px; }
+  .solution-toggle:hover { background:rgba(201,162,39,0.2); border-color:var(--gold); }
+  .solution-toggle .arrow { transition:transform .3s; }
+  .solution-toggle.open .arrow { transform:rotate(90deg); }
+  .solution-body { display:none; background:rgba(14,22,40,0.6); border:1px solid var(--border); border-radius:8px; padding:18px; margin-bottom:14px; animation:fadeIn .3s ease; }
+  .solution-body.show { display:block; }
 
-/* ─── RESPONSIVE ─── */
-@media(max-width:600px){
-  .section{padding:1rem .75rem}
-  .qcard{padding:1rem}
-  table.tf{font-size:.82rem}
-  table.tf th,table.tf td{padding:.5rem .6rem}
-  .code-block{font-size:.78rem;padding:1rem}
-}
+  .step { display:flex; gap:11px; margin-bottom:13px; align-items:flex-start; }
+  .step-num { background:rgba(201,162,39,0.2); color:var(--gold-light); border-radius:4px; padding:2px 7px; font-size:.73rem; font-weight:700; flex-shrink:0; margin-top:3px; }
+  .step-content { font-size:.86rem; line-height:1.8; color:rgba(232,220,200,0.85); flex:1; }
+  .math-line { direction:ltr; text-align:left; background:rgba(255,255,255,0.04); border-radius:4px; padding:5px 11px; margin:5px 0; font-size:.83rem; }
+  .answer-box { background:rgba(76,175,132,0.1); border:1px solid rgba(76,175,132,0.3); border-radius:6px; padding:10px 14px; font-size:.88rem; color:#7ed4aa; margin-top:10px; }
+  .answer-box strong { color:var(--green); }
+
+  .divider { height:1px; background:linear-gradient(90deg,transparent,var(--gold-dark),transparent); margin:20px 0; }
+
+  /* Canvas charts */
+  .chart-wrap { background:rgba(14,22,40,0.7); border:1px solid var(--border); border-radius:10px; padding:14px; margin:14px 0; overflow-x:auto; }
+  .chart-wrap canvas { display:block; margin:0 auto; max-width:100%; }
+  .chart-title { font-size:.8rem; color:var(--gold-light); letter-spacing:1px; margin-bottom:10px; text-align:center; }
+
+  .highlight { color:var(--gold-light); font-weight:600; }
+  .highlight-blue { color:var(--accent); font-weight:600; }
+  .highlight-green { color:var(--green); font-weight:600; }
+  .highlight-red { color:var(--red); font-weight:600; }
+  .highlight-purple { color:var(--purple); font-weight:600; }
+
+  .chips { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
+  .chip { background:rgba(201,162,39,0.12); border:1px solid rgba(201,162,39,0.3); color:var(--gold-light); font-size:.76rem; padding:4px 13px; border-radius:20px; direction:ltr; }
+
+  .prob-table { width:100%; border-collapse:collapse; font-size:.82rem; margin:12px 0; }
+  .prob-table th { background:rgba(201,162,39,0.15); color:var(--gold-light); padding:9px 12px; text-align:center; border:1px solid var(--border); }
+  .prob-table td { padding:8px 12px; text-align:center; border:1px solid rgba(201,162,39,0.1); }
+  .prob-table tr:nth-child(even) td { background:rgba(255,255,255,0.02); }
+
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+  @media(max-width:520px) { .compare-grid { grid-template-columns:1fr; } }
+  .compare-box { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; padding:14px; }
+  .compare-box h4 { font-size:.85rem; margin-bottom:8px; }
+
+  @media(max-width:600px) { .card-body{padding:14px} .card-header{padding:12px 14px} }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>📚 حلول الامتحانات</h1>
-  <p>قواعد البيانات العلائقية – Relational Databases</p>
-  <div class="header-meta">
-    <span class="meta-chip">📅 2025 – 2026</span>
-    <span class="meta-chip">👨‍🏫 م.م. مصطفى لطيف &amp; م.م. سعاد محمد</span>
-    <span class="meta-chip">🎯 Mid-term + Quiz 1 + Quiz 2</span>
-  </div>
+  <div class="header-badge">المحاضرة الثالثة</div>
+  <h1>المتغيرات العشوائية</h1>
+  <p>PMF &nbsp;·&nbsp; CDF &nbsp;·&nbsp; PDF &nbsp;—&nbsp; Kahlan AL-Juburi · Spring 2026</p>
 </header>
 
-<nav>
-  <div class="tabs">
-    <button class="tab active" onclick="show('mid')">🏫 امتحان الميد كورس</button>
-    <button class="tab" onclick="show('q1')">📝 كويز 1 – SQL</button>
-    <button class="tab" onclick="show('q2a')">🐟 كويز 2 (أ) – رخصة صيد</button>
-    <button class="tab" onclick="show('q2b')">🏭 كويز 2 (ب) – مواد الشركة</button>
-  </div>
+<nav id="mainNav">
+  <button class="nav-btn active" onclick="show('rv',this)">المتغير العشوائي</button>
+  <button class="nav-btn" onclick="show('pmf',this)">PMF</button>
+  <button class="nav-btn" onclick="show('cdf',this)">CDF</button>
+  <button class="nav-btn" onclick="show('pdf',this)">PDF</button>
+  <button class="nav-btn" onclick="show('mixed',this)">المختلط</button>
+  <button class="nav-btn" onclick="show('summary',this)">ملخص القوانين</button>
+  <button class="nav-btn" onclick="show('problems',this)">المسائل المحلولة</button>
 </nav>
 
-<!-- ═══════════════════════════════════════════
-     SECTION 1 – MID-TERM EXAM
-════════════════════════════════════════════ -->
-<section class="section active" id="mid">
-  <div class="sec-header">
-    <div class="sec-badge">Mid-term</div>
-    <h2>امتحان المنتصف – قواعد البيانات العلائقية</h2>
-  </div>
+<main>
 
-  <!-- Q1: TRUE / FALSE -->
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">1</span>ضع صح أو خطأ أمام الجمل الآتية (اختر خمسة فقط)</div>
-    <div class="tf-wrap">
-      <table class="tf">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>الجملة</th>
-            <th>الإجابة</th>
-            <th>التوضيح</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>1</strong></td>
-            <td>نموذج الكيان أو العلاقة ER هو نموذج يقوم بعرض البيانات بشكل عالي المستوى.</td>
-            <td><span class="badge-ok">✔ صح</span></td>
-            <td>نموذج ER هو نموذج بيانات مفاهيمي عالي المستوى (High-level Conceptual Data Model).</td>
-          </tr>
-          <tr>
-            <td><strong>2</strong></td>
-            <td>الصفات Attributes هي عبارة عن فئة من البيانات.</td>
-            <td><span class="badge-no">✘ خطأ</span></td>
-            <td>الصفات هي خصائص أو مميزات تصف الكيان أو العلاقة، وليست "فئة من البيانات" (الفئة هي الكيان نفسه أو الجدول).</td>
-          </tr>
-          <tr>
-            <td><strong>3</strong></td>
-            <td>الصفات البسيطة وهي الصفات التي يمكن تجزئتها مثل: رقم الطالب، الجنس ...</td>
-            <td><span class="badge-no">✘ خطأ</span></td>
-            <td>الصفات البسيطة (Atomic) هي التي <strong>لا يمكن</strong> تجزئتها. أما التي يمكن تجزئتها فتُسمى صفات مركبة (Composite).</td>
-          </tr>
-          <tr>
-            <td><strong>4</strong></td>
-            <td>الاشتراك الكلي: هو بعض الكيانات ترتبط ببعض الوحدات (instances) في العلاقة.</td>
-            <td><span class="badge-no">✘ خطأ</span></td>
-            <td>الاشتراك الكلي (Total Participation) يعني أن <strong>جميع</strong> الكيانات تشارك في العلاقة. أما المذكور في الجملة فهو الاشتراك الجزئي (Partial).</td>
-          </tr>
-          <tr>
-            <td><strong>5</strong></td>
-            <td>الكيانات الضعيفة: هي كيانات لا توجد مستقلة في النظام، أي أن وجودها يعتمد على وجود كيان آخر.</td>
-            <td><span class="badge-ok">✔ صح</span></td>
-            <td>الكيان الضعيف (Weak Entity) لا يملك مفتاحاً أساسياً خاصاً به ويعتمد في وجوده على الكيان المُحدِّد (Owner Entity).</td>
-          </tr>
-          <tr>
-            <td><strong>6</strong></td>
-            <td>تتم عملية تحويل مخطط ERD بتطبيق مجموعة من الخطوات البسيطة تسمى خوارزمية hashing algorithm.</td>
-            <td><span class="badge-no">✘ خطأ</span></td>
-            <td>الخوارزمية المستخدمة تُسمى <strong>Mapping Algorithm</strong> (خوارزمية التحويل/الترميز)، وليس hashing.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="info" style="margin-top:1rem">
-      <strong>ملاحظة:</strong> الإجابات الصحيحة هي: <strong>1 و 5</strong> (صح)، والباقي (2 و 3 و 4 و 6) خطأ. اختر أي خمسة جمل للإجابة عليها.
-    </div>
-  </div>
-
-  <!-- Q2: ER → Database Diagram -->
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">2</span>حوّل مخطط الكينونات ER إلى مخطط قواعد البيانات (Database Diagram)</div>
-
-    <p style="margin-bottom:1rem;color:var(--text2);font-size:.93rem">
-      من مخطط ER المعطى نستخرج: كيان EMPLOYEE وكيان DEPARTMENT، علاقة MANAGES (1:1)، وعلاقة WORKS_FOR (1:N) تُمثلها الصفة Number_of_employees، والصفة المتعددة Locations.
-    </p>
-
-    <h3 style="color:var(--orange);margin-bottom:.75rem;font-size:1rem">📋 المخطط العلائقي (Relational Schema):</h3>
-    <div class="schema-grid">
-      <div class="sbox">
-        <div class="sbox-head">EMPLOYEE</div>
-        <div class="sbox-rows">
-          <div class="srow"><span class="pk">PK</span> San</div>
-          <div class="srow">Fname</div>
-          <div class="srow">Minit</div>
-          <div class="srow">Lname</div>
-          <div class="srow">Bdate</div>
-          <div class="srow">Address</div>
-          <div class="srow">Salary</div>
-          <div class="srow">Sex</div>
-          <div class="srow"><span class="fk">FK</span> Dno → DEPARTMENT(Number)</div>
-        </div>
-      </div>
-      <div class="sbox">
-        <div class="sbox-head">DEPARTMENT</div>
-        <div class="sbox-rows">
-          <div class="srow"><span class="pk">PK</span> Number</div>
-          <div class="srow">Name</div>
-          <div class="srow"><span class="fk">FK</span> Mgr_SSN → EMPLOYEE(San)</div>
-          <div class="srow">Mgr_Start_date</div>
-        </div>
-      </div>
-      <div class="sbox">
-        <div class="sbox-head">DEPT_LOCATIONS</div>
-        <div class="sbox-rows">
-          <div class="srow"><span class="fk">FK</span> Dnumber → DEPARTMENT(Number)</div>
-          <div class="srow">Dlocation</div>
-        </div>
+<!-- ======== RANDOM VARIABLE ======== -->
+<div id="rv" class="section active">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🎲</div>
+      <div>
+        <div class="card-title">ما هو المتغير العشوائي؟</div>
+        <div class="card-subtitle">Random Variable (RV)</div>
       </div>
     </div>
-
-    <h3 style="color:var(--orange);margin:.75rem 0 .5rem;font-size:1rem">📊 مخطط قاعدة البيانات (Database Diagram):</h3>
-    <div class="diagram">
-      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Tahoma,sans-serif">
-        <defs>
-          <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0,10 3.5,0 7" fill="#1e40af"/>
-          </marker>
-          <marker id="arr2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0,10 3.5,0 7" fill="#b91c1c"/>
-          </marker>
-        </defs>
-
-        <!-- EMPLOYEE TABLE -->
-        <rect x="10" y="10" width="200" height="282" fill="#eff6ff" stroke="#1e40af" stroke-width="2" rx="4"/>
-        <rect x="10" y="10" width="200" height="30" fill="#1e40af" rx="4"/>
-        <rect x="10" y="36" width="200" height="4" fill="#1e40af"/>
-        <text x="110" y="30" text-anchor="middle" fill="white" font-size="13" font-weight="bold">EMPLOYEE</text>
-        <line x1="10" y1="66" x2="210" y2="66" stroke="#bfdbfe" stroke-width="1"/>
-        <text x="20" y="58" fill="#1e3a8a" font-size="11" font-weight="bold">🔑 San</text>
-        <line x1="10" y1="88" x2="210" y2="88" stroke="#bfdbfe"/>
-        <text x="20" y="80" fill="#374151" font-size="11">Fname</text>
-        <line x1="10" y1="110" x2="210" y2="110" stroke="#bfdbfe"/>
-        <text x="20" y="102" fill="#374151" font-size="11">Minit</text>
-        <line x1="10" y1="132" x2="210" y2="132" stroke="#bfdbfe"/>
-        <text x="20" y="124" fill="#374151" font-size="11">Lname</text>
-        <line x1="10" y1="154" x2="210" y2="154" stroke="#bfdbfe"/>
-        <text x="20" y="146" fill="#374151" font-size="11">Bdate</text>
-        <line x1="10" y1="176" x2="210" y2="176" stroke="#bfdbfe"/>
-        <text x="20" y="168" fill="#374151" font-size="11">Address</text>
-        <line x1="10" y1="198" x2="210" y2="198" stroke="#bfdbfe"/>
-        <text x="20" y="190" fill="#374151" font-size="11">Salary</text>
-        <line x1="10" y1="220" x2="210" y2="220" stroke="#bfdbfe"/>
-        <text x="20" y="212" fill="#374151" font-size="11">Sex</text>
-        <text x="20" y="256" fill="#1d4ed8" font-size="11" font-style="italic">🔗 Dno (FK)</text>
-        <line x1="10" y1="262" x2="210" y2="262" stroke="#bfdbfe"/>
-        <text x="20" y="283" fill="#6b7280" font-size="10">→ DEPARTMENT.Number</text>
-
-        <!-- DEPT TABLE -->
-        <rect x="360" y="10" width="230" height="170" fill="#f0fdf4" stroke="#15803d" stroke-width="2" rx="4"/>
-        <rect x="360" y="10" width="230" height="30" fill="#15803d" rx="4"/>
-        <rect x="360" y="36" width="230" height="4" fill="#15803d"/>
-        <text x="475" y="30" text-anchor="middle" fill="white" font-size="13" font-weight="bold">DEPARTMENT</text>
-        <line x1="360" y1="66" x2="590" y2="66" stroke="#bbf7d0"/>
-        <text x="370" y="58" fill="#14532d" font-size="11" font-weight="bold">🔑 Number</text>
-        <line x1="360" y1="88" x2="590" y2="88" stroke="#bbf7d0"/>
-        <text x="370" y="80" fill="#374151" font-size="11">Name</text>
-        <line x1="360" y1="122" x2="590" y2="122" stroke="#bbf7d0"/>
-        <text x="370" y="112" fill="#1d4ed8" font-size="11" font-style="italic">🔗 Mgr_SSN (FK)</text>
-        <text x="370" y="127" fill="#6b7280" font-size="10">→ EMPLOYEE.San</text>
-        <line x1="360" y1="148" x2="590" y2="148" stroke="#bbf7d0"/>
-        <text x="370" y="162" fill="#374151" font-size="11">Mgr_Start_date</text>
-
-        <!-- DEPT_LOCATIONS TABLE -->
-        <rect x="680" y="10" width="230" height="126" fill="#fef9c3" stroke="#92400e" stroke-width="2" rx="4"/>
-        <rect x="680" y="10" width="230" height="30" fill="#92400e" rx="4"/>
-        <rect x="680" y="36" width="230" height="4" fill="#92400e"/>
-        <text x="795" y="30" text-anchor="middle" fill="white" font-size="13" font-weight="bold">DEPT_LOCATIONS</text>
-        <line x1="680" y1="66" x2="910" y2="66" stroke="#fde68a"/>
-        <text x="690" y="58" fill="#1d4ed8" font-size="11" font-style="italic">🔗 Dnumber (FK)</text>
-        <text x="690" y="82" fill="#6b7280" font-size="10">→ DEPARTMENT.Number</text>
-        <line x1="680" y1="100" x2="910" y2="100" stroke="#fde68a"/>
-        <text x="690" y="118" fill="#374151" font-size="11">Dlocation</text>
-
-        <!-- FK Arrow: EMPLOYEE.Dno → DEPARTMENT.Number -->
-        <path d="M210,248 Q285,248 285,36 L360,36" fill="none" stroke="#1e40af" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr)"/>
-        <text x="235" y="230" fill="#1e40af" font-size="10">Dno→</text>
-
-        <!-- FK Arrow: DEPT.Mgr_SSN → EMPLOYEE.San -->
-        <path d="M360,112 Q330,112 330,300 L110,300 L110,292" fill="none" stroke="#b91c1c" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr2)"/>
-        <text x="335" y="108" fill="#b91c1c" font-size="9" text-anchor="middle">Mgr_SSN→</text>
-
-        <!-- FK Arrow: DEPT_LOCATIONS.Dnumber → DEPARTMENT.Number -->
-        <path d="M680,48 L590,48" fill="none" stroke="#1e40af" stroke-width="1.8" stroke-dasharray="6,3" marker-end="url(#arr)"/>
-
-        <!-- Labels -->
-        <text x="105" y="305" text-anchor="middle" fill="#6b7280" font-size="10">1</text>
-        <text x="355" y="270" text-anchor="middle" fill="#6b7280" font-size="10">N</text>
-      </svg>
+    <div class="card-body">
+      <p style="font-size:.9rem;line-height:1.9;margin-bottom:16px;">
+        المتغير العشوائي هو <span class="highlight">دالة</span> تُعيّن قيمة عددية لكل نتيجة في فضاء العينة. يُرمز له بحروف كبيرة مثل X أو Y.
+      </p>
+      <div class="law-box">
+        <div class="law-label">التعريف الرسمي</div>
+        <div class="formula">\( X : S \rightarrow \mathbb{R} \)</div>
+      </div>
+      <div class="when-box">
+        <strong>📌 لماذا نستخدمه؟</strong>
+        يُحوّل النتائج غير الرقمية (مثل: وجوه/أرقام، أحمر/أزرق، فصيلة الدم) إلى أرقام يمكن التعامل معها رياضياً وإحصائياً.
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;">أنواع المتغيرات العشوائية</p>
+      <div class="type-grid">
+        <div class="type-card disc">
+          <div class="type-title">📊 المتقطع (Discrete)</div>
+          <p>يأخذ قيماً قابلة للعد (محدودة أو غير محدودة). مثال: عدد الوجوه في رمي عملة، نتيجة النرد.</p>
+        </div>
+        <div class="type-card cont">
+          <div class="type-title">📈 المستمر (Continuous)</div>
+          <p>يأخذ أي قيمة في فترة مستمرة. مثال: اختيار رقم حقيقي عشوائي من [1,10]، الطول، الوزن.</p>
+        </div>
+        <div class="type-card mixed">
+          <div class="type-title">🔀 المختلط (Mixed)</div>
+          <p>يجمع بين المتقطع والمستمر. مثال: رمي عملة، إذا وجوه → رقم حقيقي، إذا أرقام → صفر.</p>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">مثال: رمي 3 عملات (HHH ، HHT ، ...)</p>
+      <div style="overflow-x:auto;">
+        <table class="prob-table">
+          <tr>
+            <th>المتغير</th><th>HHH</th><th>HHT</th><th>HTH</th><th>HTT</th><th>THH</th><th>THT</th><th>TTH</th><th>TTT</th>
+          </tr>
+          <tr><td style="color:var(--gold-light)">Y₁ (ترقيم)</td><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr>
+          <tr><td style="color:var(--accent)">Y₂ (عدد الأرقام)</td><td>0</td><td>1</td><td>1</td><td>2</td><td>1</td><td>2</td><td>2</td><td>3</td></tr>
+          <tr><td style="color:var(--green)">Y₃ (أول موضع وجوه)</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td>3</td><td>0</td></tr>
+          <tr><td style="color:var(--purple)">Y₄ (أطول تسلسل)</td><td>3</td><td>2</td><td>1</td><td>2</td><td>2</td><td>1</td><td>2</td><td>3</td></tr>
+          <tr><td style="color:var(--orange)">Y₅ (عدد التغييرات)</td><td>0</td><td>1</td><td>2</td><td>1</td><td>1</td><td>2</td><td>1</td><td>0</td></tr>
+        </table>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div class="info">
-      <strong>خطوات التحويل (Mapping Algorithm):</strong><br>
-      1️⃣ كل كيان قوي ← جدول مستقل بصفاته البسيطة والمركبة.<br>
-      2️⃣ علاقة 1:N (WORKS_FOR) ← أضِف FK في جانب N (EMPLOYEE.Dno).<br>
-      3️⃣ علاقة 1:1 (MANAGES) ← أضِف FK وصفة العلاقة في أحد الجانبين (DEPARTMENT.Mgr_SSN + Mgr_Start_date).<br>
-      4️⃣ الصفة متعددة القيم (Locations) ← جدول منفصل DEPT_LOCATIONS(Dnumber FK, Dlocation).
+<!-- ======== PMF ======== -->
+<div id="pmf" class="section">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📊</div>
+      <div>
+        <div class="card-title">دالة الكتلة الاحتمالية</div>
+        <div class="card-subtitle">Probability Mass Function — pmf</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.9rem;line-height:1.8;margin-bottom:14px;">
+        تُستخدم مع <span class="highlight">المتغيرات العشوائية المتقطعة</span> فقط. تعطي احتمال أن يساوي المتغير العشوائي قيمة بعينها.
+      </p>
+      <div class="law-box">
+        <div class="law-label">التعريف</div>
+        <div class="formula">\( p_X(k) = P\{X = k\} \)</div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;">خصائص الـ pmf</p>
+      <div class="prop-item">
+        <div class="prop-num">1</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">عدم السالبية</div>
+            <div class="formula">\( \forall k,\quad p_X(k) \geq 0 \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">2</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">مجموع كل الاحتمالات = 1</div>
+            <div class="formula">\( \sum_k p_X(k) = P\{S\} = 1 \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">3</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">احتمال حدث A</div>
+            <div class="formula">\( P\{A\} = \sum_{k \in A} p_X(k) \)</div>
+          </div>
+          <div class="when-box">
+            <strong>📌 متى تستخدمه</strong>
+            لحساب احتمال أي حدث: جمع كتل الاحتمال لكل قيم k التي تنتمي لهذا الحدث.
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">أمثلة على قراءة الـ pmf</p>
+      <div style="background:rgba(14,22,40,0.5);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:.85rem;line-height:2;direction:ltr;text-align:left;">
+        P{X ≤ 3} = P{X ∈ {1,2}} = p_X(1) + p_X(2)<br>
+        P{2 ≤ X ≤ 4} = p_X(2) + p_X(4)<br>
+        P{X > 4} = p_X(6.5) + p_X(7)<br>
+        P{|X−4| > 1} = p_X(1) + p_X(2) + p_X(6.5) + p_X(7)<br>
+        P{|X−4| = 3} = p_X(1) + p_X(7)
+      </div>
+      <div class="warn-box">
+        <div class="warn-label">⚠️ ملاحظة</div>
+        <p style="font-size:.86rem;line-height:1.7;">الـ pmf غير مفيدة للمتغيرات المستمرة لأن P{X = أي نقطة بعينها} = 0 دائماً.</p>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">رسم pmf للمتغير Y₁ (ترقيم رمي 3 عملات)</p>
+      <div class="chart-wrap">
+        <div class="chart-title">p_Y₁(k) — كل قيمة احتمالها 1/8</div>
+        <canvas id="pmfChart1" width="500" height="180"></canvas>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">p_Y₂(k) — عدد الأرقام في 3 رميات</div>
+        <canvas id="pmfChart2" width="500" height="180"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== CDF ======== -->
+<div id="cdf" class="section">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📈</div>
+      <div>
+        <div class="card-title">دالة التوزيع التراكمي</div>
+        <div class="card-subtitle">Cumulative Distribution Function — CDF</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.9rem;line-height:1.8;margin-bottom:14px;">
+        تُستخدم مع <span class="highlight">جميع أنواع</span> المتغيرات العشوائية (متقطعة، مستمرة، مختلطة). تعطي احتمال أن يكون المتغير أقل من أو يساوي قيمة x.
+      </p>
+      <div class="law-box">
+        <div class="law-label">التعريف</div>
+        <div class="formula">\( F_X(x) = P\{X \leq x\} = \sum_{k \leq x} p_X(k) \quad \text{(للمتقطع)} \)</div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;">خصائص الـ CDF</p>
+      <div class="prop-item">
+        <div class="prop-num">1</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">الحدود</div>
+            <div class="formula">\( \lim_{x \to -\infty} F_X(x) = 0 \qquad \lim_{x \to +\infty} F_X(x) = 1 \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">2</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">متصاعدة غير تنازلية</div>
+            <div class="formula">\( a < b \implies F_X(a) \leq F_X(b) \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">3</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">مستمرة من اليمين</div>
+            <div class="formula">\( F_X(a) = \lim_{x \to a^+} F_X(x) \triangleq F_X(a^+) \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">4</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">احتمال فترة</div>
+            <div class="formula">\( P\{a < X \leq b\} = F_X(b) - F_X(a) \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">5</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">احتمال نقطة بعينها</div>
+            <div class="formula">\( P\{X = a\} = F_X(a) - F_X(a^-) \)</div>
+          </div>
+          <div class="when-box">
+            <strong>📌 القفزات في الـ CDF</strong>
+            في المتغير المتقطع، الـ CDF تقفز عند كل قيمة لها كتلة احتمال. حجم القفزة = قيمة الـ pmf عند تلك النقطة.
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="chart-wrap">
+        <div class="chart-title">pmf وCDF للمتغير Y₂ (عدد الأرقام في 3 رميات)</div>
+        <canvas id="cdfChart" width="520" height="220"></canvas>
+      </div>
+      <div class="info-box">
+        <div class="info-label">💡 كيف تقرأ CDF المتقطع</div>
+        <p style="font-size:.85rem;line-height:1.8;">
+          الـ CDF للمتغير المتقطع هي <strong>دالة سلمية</strong>: تبقى ثابتة بين نقاط القيم، ثم تقفز فجأة عند كل قيمة يأخذها المتغير. تأكد من النقاط المفتوحة والمغلقة في الرسم (مستمرة من اليمين).
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== PDF ======== -->
+<div id="pdf" class="section">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">〰️</div>
+      <div>
+        <div class="card-title">دالة كثافة الاحتمال</div>
+        <div class="card-subtitle">Probability Density Function — PDF</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.9rem;line-height:1.8;margin-bottom:14px;">
+        تُستخدم مع <span class="highlight-green">المتغيرات المستمرة فقط</span>. هي مشتقة الـ CDF، وتعطي <span class="highlight">كثافة</span> الاحتمال حول كل نقطة — ليست احتمالاً مباشراً.
+      </p>
+      <div class="law-box">
+        <div class="law-label">التعريف — مشتقة CDF</div>
+        <div class="formula">\( f_X(x) \triangleq \dfrac{d}{dx} F_X(x) \)</div>
+      </div>
+      <div class="law-box">
+        <div class="law-label">العلاقة العكسية — CDF من PDF</div>
+        <div class="formula">\( F_X(x) = \int_{-\infty}^{x} f_X(t)\, dt \)</div>
+      </div>
+      <div class="law-box">
+        <div class="law-label">احتمال فترة</div>
+        <div class="formula">\( P\{a < X \leq b\} = F_X(b) - F_X(a) = \int_a^b f_X(x)\, dx \)</div>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;">خصائص الـ PDF</p>
+      <div class="prop-item">
+        <div class="prop-num">1</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">عدم السالبية</div>
+            <div class="formula">\( \forall x,\quad f_X(x) \geq 0 \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="prop-item">
+        <div class="prop-num">2</div>
+        <div class="prop-content">
+          <div class="law-box">
+            <div class="law-label">التطبيع — المساحة الكلية = 1</div>
+            <div class="formula">\( \int_{-\infty}^{+\infty} f_X(x)\, dx = 1 \)</div>
+          </div>
+        </div>
+      </div>
+      <div class="warn-box">
+        <div class="warn-label">⚠️ تنبيه مهم جداً</div>
+        <p style="font-size:.86rem;line-height:1.7;">
+          الـ PDF ليست احتمالاً! قيمة f_X(x) قد تتجاوز 1. الاحتمال يُحسب فقط من <strong>المساحة تحت المنحنى</strong> (التكامل)، وليس من ارتفاع النقطة.<br>
+          لذلك: P{X = نقطة بعينها} = 0 دائماً للمتغير المستمر.
+        </p>
+      </div>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">مثال: X موزّع بشكل منتظم على [1, 10]</p>
+      <div class="compare-grid">
+        <div class="compare-box">
+          <h4 style="color:var(--accent)">CDF</h4>
+          <div style="font-size:.82rem;direction:ltr;line-height:2;">
+            F_X(x) = 0 &nbsp; (x &lt; 1)<br>
+            F_X(x) = (x−1)/9 &nbsp; (1 ≤ x ≤ 10)<br>
+            F_X(x) = 1 &nbsp; (x &gt; 10)
+          </div>
+        </div>
+        <div class="compare-box">
+          <h4 style="color:var(--green)">PDF</h4>
+          <div style="font-size:.82rem;direction:ltr;line-height:2;">
+            f_X(x) = 0 &nbsp; (x &lt; 1)<br>
+            f_X(x) = 1/9 &nbsp; (1 &lt; x &lt; 10)<br>
+            f_X(x) = 0 &nbsp; (x &gt; 10)
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">CDF و PDF لتوزيع منتظم على [1,10]</div>
+        <canvas id="pdfChart" width="520" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== MIXED ======== -->
+<div id="mixed" class="section">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔀</div>
+      <div>
+        <div class="card-title">المتغير العشوائي المختلط</div>
+        <div class="card-subtitle">Mixed Type Random Variable</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <p style="font-size:.9rem;line-height:1.8;margin-bottom:14px;">
+        يجمع بين خصائص المتقطع والمستمر. يظهر في الـ CDF كمزيج من <span class="highlight">قفزات</span> (الجزء المتقطع) و<span class="highlight-green">مناطق مستمرة</span> (الجزء المستمر). أما الـ PDF فيتضمن <span class="highlight-purple">دوال دلتا δ</span> عند نقاط القفز.
+      </p>
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:12px;">مثال كامل: رمي عملة + اختيار رقم</p>
+      <div style="background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.2);border-radius:8px;padding:14px 18px;margin-bottom:14px;font-size:.88rem;line-height:1.8;">
+        أرمي عملة عادلة. إذا وجوه (H) → أختار رقماً عشوائياً من [1,6]. إذا أرقام (T) → أختار الصفر.<br>
+        ليكن Y هو الرقم المختار. جد توزيع Y.
+      </div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          عند y = 0:
+          <div class="math-line">F_Y(0) = P{Y≤0|H}·P{H} + P{Y≤0|T}·P{T} = 0·(1/2) + 1·(1/2) = 1/2</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          لـ 0 &lt; y &lt; 1: لا تزيد الـ CDF (لا توجد كتلة هنا)
+          <div class="math-line">F_Y(y) = 1/2</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          لـ 1 ≤ y ≤ 6:
+          <div class="math-line">F_Y(y) = P{Y≤y|H}·(1/2) + P{Y≤y|T}·(1/2) = (y−1)/(6−1)·(1/2) + 1·(1/2) = (y+4)/10</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          لـ y &gt; 6:
+          <div class="math-line">F_Y(y) = 1</div>
+        </div>
+      </div>
+      <div class="law-box">
+        <div class="law-label">CDF المختلطة</div>
+        <div class="formula" style="font-size:.85rem;">
+          \( F_Y(y) = \begin{cases} 0 & y < 0 \\ 1/2 & 0 \leq y \leq 1 \\ (y+4)/10 & 1 < y \leq 6 \\ 1 & y > 6 \end{cases} \)
+        </div>
+      </div>
+      <div class="law-box">
+        <div class="law-label">PDF المختلطة (تتضمن دلتا)</div>
+        <div class="formula" style="font-size:.85rem;">
+          \( f_Y(y) = \dfrac{1}{2}\delta(y) + \begin{cases} 1/10 & 1 \leq y \leq 6 \\ 0 & \text{otherwise} \end{cases} \)
+        </div>
+      </div>
+      <div class="info-box">
+        <div class="info-label">💡 دالة دلتا δ(y)</div>
+        <p style="font-size:.85rem;line-height:1.8;">
+          دالة دلتا ديراك δ(y) تمثل الكتلة الاحتمالية المركّزة في نقطة واحدة. هنا المعامل 1/2 يعني أن احتمال Y = 0 هو 1/2. في الرسم تظهر كسهم (spike) عمودي.
+        </p>
+      </div>
+      <div class="chart-wrap">
+        <div class="chart-title">CDF وPDF للمتغير المختلط Y</div>
+        <canvas id="mixedChart" width="520" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== SUMMARY ======== -->
+<div id="summary" class="section">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📐</div>
+      <div>
+        <div class="card-title">ملخص جميع القوانين</div>
+        <div class="card-subtitle">المحاضرة الثالثة — نظرة سريعة</div>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <div class="law-box">
+        <div class="law-label">دالة الكتلة الاحتمالية (PMF) — متقطع</div>
+        <div class="formula">
+          \( p_X(k) = P\{X=k\} \geq 0 \qquad \sum_k p_X(k) = 1 \)
+        </div>
+      </div>
+
+      <div class="law-box">
+        <div class="law-label">دالة التوزيع التراكمي (CDF) — الكل</div>
+        <div class="formula">
+          \( F_X(x) = P\{X \leq x\} \)<br>
+          \( P\{a < X \leq b\} = F_X(b) - F_X(a) \)<br>
+          \( P\{X = a\} = F_X(a) - F_X(a^-) \)
+        </div>
+      </div>
+
+      <div class="law-box">
+        <div class="law-label">دالة كثافة الاحتمال (PDF) — مستمر</div>
+        <div class="formula">
+          \( f_X(x) = \dfrac{d}{dx}F_X(x) \qquad F_X(x) = \int_{-\infty}^{x} f_X(t)\,dt \)<br>
+          \( \int_{-\infty}^{+\infty} f_X(x)\,dx = 1 \qquad P\{a < X \leq b\} = \int_a^b f_X(x)\,dx \)
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <p style="font-size:.88rem;font-weight:700;color:var(--gold-light);margin-bottom:14px;">جدول المقارنة السريعة</p>
+      <div style="overflow-x:auto">
+        <table class="prob-table">
+          <tr>
+            <th>الخاصية</th><th style="color:var(--accent)">PMF</th><th style="color:var(--gold-light)">CDF</th><th style="color:var(--green)">PDF</th>
+          </tr>
+          <tr><td>النوع</td><td>متقطع فقط</td><td>الكل</td><td>مستمر فقط</td></tr>
+          <tr><td>احتمال نقطة</td><td>p_X(k) مباشرة</td><td>F(a) − F(a⁻)</td><td>دائماً = 0</td></tr>
+          <tr><td>احتمال فترة</td><td>جمع الكتل</td><td>F(b) − F(a)</td><td>تكامل</td></tr>
+          <tr><td>الشكل البياني</td><td>أعمدة (spikes)</td><td>دالة سلمية / ناعمة</td><td>منحنى مستمر</td></tr>
+          <tr><td>العلاقة</td><td>—</td><td>∑ pmf أو ∫ pdf</td><td>مشتقة CDF</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======== PROBLEMS ======== -->
+<div id="problems" class="section">
+
+  <!-- Problem 1 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🏺</div>
+      <div>
+        <div class="card-title">مسألة 1 — الجرّة والـ PMF والـ CDF</div>
+        <div class="card-subtitle">متغير عشوائي متقطع</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div style="background:rgba(224,90,90,0.07);border:1px solid rgba(224,90,90,0.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+        <p style="font-size:.7rem;color:var(--red);letter-spacing:2px;font-weight:700;margin-bottom:8px;">نص المسألة</p>
+        <p style="font-size:.88rem;line-height:1.8;">
+          جرّة تحتوي 3 زرقاء + 5 بيضاء + 2 حمراء. نسحب كرة عشوائياً.<br>
+          عرّف متغيراً عشوائياً X. ارسم pmf وcdf. احسب P{أزرق} من pmf. احسب P{ليس أحمر} من cdf.
+        </p>
+      </div>
+      <button class="solution-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> عرض الحل</button>
+      <div class="solution-body">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            تعريف المتغير: X = 1 (أزرق)، X = 2 (أبيض)، X = 3 (أحمر)<br>
+            إجمالي = 10 كرات
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            الـ PMF:
+            <div class="math-line">p_X(1) = 3/10, &nbsp; p_X(2) = 5/10, &nbsp; p_X(3) = 2/10</div>
+            التحقق: 3/10 + 5/10 + 2/10 = 1 ✓
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            الـ CDF:
+            <div class="math-line">
+              F_X(x) = 0 &nbsp;&nbsp;&nbsp; x &lt; 1<br>
+              F_X(x) = 3/10 &nbsp; 1 ≤ x &lt; 2<br>
+              F_X(x) = 8/10 &nbsp; 2 ≤ x &lt; 3<br>
+              F_X(x) = 1 &nbsp;&nbsp;&nbsp;&nbsp; x ≥ 3
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            P{أزرق} من PMF:
+            <div class="math-line">P{أزرق} = p_X(1) = 3/10</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            P{ليس أحمر} من CDF: P{X &lt; 3} = P{X ≤ 2} = F_X(2)
+            <div class="math-line">P{ليس أحمر} = F_X(2) = 8/10 = 0.8</div>
+          </div>
+        </div>
+        <div class="answer-box"><strong>ملاحظة:</strong> P{ليس أحمر} = 1 − P{أحمر} = 1 − 2/10 = 8/10 ✓</div>
+      </div>
     </div>
   </div>
 
-  <!-- Q3: ER from Equipment form -->
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">3</span>أنشئ مخطط الكينونات ER من خلال نموذج بطاقة المعدات (Equipment Tag)</div>
-    <div class="info" style="margin-bottom:1rem">
-      من النموذج نستخلص: <strong>كيان EQUIPMENT</strong> بالصفات:
-      EquipmentNumber (مفتاح أساسي)، Description، AcquisitionDate، PurchaseCost.
+  <!-- Problem 2 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📉</div>
+      <div>
+        <div class="card-title">مسألة 2 — إيجاد CDF من PMF معطاة</div>
+        <div class="card-subtitle">رسم CDF</div>
+      </div>
     </div>
-    <div class="diagram">
-      <svg viewBox="0 0 660 400" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Tahoma,sans-serif">
-        <!-- Lines from attributes to entity -->
-        <line x1="120" y1="100" x2="228" y2="176" stroke="#64748b" stroke-width="1.8"/>
-        <line x1="540" y1="100" x2="432" y2="176" stroke="#64748b" stroke-width="1.8"/>
-        <line x1="120" y1="300" x2="228" y2="224" stroke="#64748b" stroke-width="1.8"/>
-        <line x1="540" y1="300" x2="432" y2="224" stroke="#64748b" stroke-width="1.8"/>
-
-        <!-- Entity: EQUIPMENT -->
-        <rect x="208" y="170" width="244" height="60" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5" rx="4"/>
-        <text x="330" y="206" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">EQUIPMENT</text>
-
-        <!-- KEY Attribute: EquipmentNumber (underlined) -->
-        <ellipse cx="120" cy="76" rx="105" ry="30" fill="#fef9c3" stroke="#92400e" stroke-width="2.2"/>
-        <text x="120" y="81" text-anchor="middle" font-size="13" fill="#78350f">EquipmentNumber</text>
-        <line x1="28" y1="86" x2="212" y2="86" stroke="#78350f" stroke-width="1.5"/>
-
-        <!-- Attribute: Description -->
-        <ellipse cx="545" cy="76" rx="80" ry="30" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="545" y="81" text-anchor="middle" font-size="13" fill="#78350f">Description</text>
-
-        <!-- Attribute: AcquisitionDate -->
-        <ellipse cx="120" cy="324" rx="110" ry="30" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="120" y="329" text-anchor="middle" font-size="12" fill="#78350f">AcquisitionDate</text>
-
-        <!-- Attribute: PurchaseCost -->
-        <ellipse cx="545" cy="324" rx="90" ry="30" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="545" y="329" text-anchor="middle" font-size="13" fill="#78350f">PurchaseCost</text>
-
-        <!-- Legend -->
-        <rect x="20" y="355" width="14" height="14" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" rx="2"/>
-        <text x="40" y="366" font-size="11" fill="#64748b">Entity</text>
-        <ellipse cx="105" cy="362" rx="22" ry="10" fill="#fef9c3" stroke="#92400e" stroke-width="1.5"/>
-        <text x="105" y="366" text-anchor="middle" font-size="11" fill="#64748b">Attribute</text>
-        <text x="150" y="366" font-size="11" fill="#64748b" text-decoration="underline">  Underline = Primary Key</text>
-      </svg>
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════
-     SECTION 2 – QUIZ 1 (SQL)
-════════════════════════════════════════════ -->
-<section class="section" id="q1">
-  <div class="sec-header">
-    <div class="sec-badge">Quiz 1</div>
-    <h2>كويز 1 – استعلامات SQL (JOIN)</h2>
-  </div>
-
-  <!-- Q1: Categories + Products -->
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">1</span>ربط جدول Categories مع جدول Products</div>
-    <p style="margin-bottom:1rem;color:var(--text2)">أكتب جملة SELECT تجمع الجدولين وتُرجع: category_name, product_name, price مرتبةً حسب category_name.</p>
-
-    <div class="code-block">
-      <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-<span class="cmt">-- الجداول المعطاة</span>
-<span class="cmt">-- Categories: category_id | category_name</span>
-<span class="cmt">-- Products: product_id | product_name | category_id | price</span>
-
-<span class="kw">SELECT</span>
-    c.category_name,
-    p.product_name,
-    p.price
-<span class="kw">FROM</span> <span class="tbl">Categories</span> c
-<span class="kw">INNER JOIN</span> <span class="tbl">Products</span> p
-    <span class="kw">ON</span> c.category_id <span class="kw">=</span> p.category_id
-<span class="kw">ORDER BY</span> c.category_name <span class="kw">ASC</span>;
-    </div>
-
-    <div class="rtbl-wrap">
-      <p style="color:var(--text2);font-size:.88rem;margin-bottom:.5rem">✅ نتيجة الاستعلام المتوقعة:</p>
-      <table class="rtbl">
-        <thead><tr><th>category_name</th><th>product_name</th><th>price</th></tr></thead>
-        <tbody>
-          <tr><td>Books</td><td>SQL Book</td><td>50</td></tr>
-          <tr><td>Electronics</td><td>Laptop</td><td>900</td></tr>
-          <tr><td>Electronics</td><td>Phone</td><td>700</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="info">
-      <strong>شرح الاستعلام:</strong><br>
-      • <code style="color:var(--orange)">INNER JOIN</code> → يُرجع السجلات المتطابقة في كلا الجدولين بناءً على <code style="color:var(--orange)">category_id</code>.<br>
-      • <code style="color:var(--orange)">ORDER BY category_name ASC</code> → يرتب النتائج أبجدياً تصاعدياً حسب اسم التصنيف.
+    <div class="card-body">
+      <div style="background:rgba(224,90,90,0.07);border:1px solid rgba(224,90,90,0.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+        <p style="font-size:.7rem;color:var(--red);letter-spacing:2px;font-weight:700;margin-bottom:8px;">نص المسألة</p>
+        <p style="font-size:.88rem;line-height:1.8;">
+          المتغير X: P{X=1} = P{X=3} = P{X=2}/2 وP{X=x}=0 لغير ذلك.<br>
+          ارسم CDF.
+        </p>
+      </div>
+      <button class="solution-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> عرض الحل</button>
+      <div class="solution-body">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            ليكن P{X=1} = P{X=3} = c، إذن P{X=2} = 2c
+            <div class="math-line">c + 2c + c = 1 → 4c = 1 → c = 1/4</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            الـ PMF:
+            <div class="math-line">p(1) = 1/4, &nbsp; p(2) = 2/4 = 1/2, &nbsp; p(3) = 1/4</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            الـ CDF (سلم):
+            <div class="math-line">
+              F(x) = 0 &nbsp;&nbsp; x &lt; 1<br>
+              F(x) = 0.25 &nbsp; 1 ≤ x &lt; 2<br>
+              F(x) = 0.75 &nbsp; 2 ≤ x &lt; 3<br>
+              F(x) = 1 &nbsp;&nbsp;&nbsp; x ≥ 3
+            </div>
+          </div>
+        </div>
+        <div class="answer-box"><strong>الجواب:</strong> CDF ذات ثلاث قفزات: عند 1 بمقدار 0.25، عند 2 بمقدار 0.5، عند 3 بمقدار 0.25</div>
+      </div>
     </div>
   </div>
 
-  <!-- Q2: Students + Courses -->
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">2</span>ربط جدول Students مع جدول Courses</div>
-    <p style="margin-bottom:1rem;color:var(--text2)">أكتب جملة SELECT تُرجع: student_name, course_name مرتبةً حسب student_id تصاعدياً.</p>
-
-    <div class="code-block">
-      <button class="copy-btn" onclick="copyCode(this)">نسخ</button>
-<span class="cmt">-- Students: student_id | student_name</span>
-<span class="cmt">-- Courses:  course_id | course_name | student_id</span>
-
-<span class="kw">SELECT</span>
-    s.student_name,
-    c.course_name
-<span class="kw">FROM</span> <span class="tbl">Students</span> s
-<span class="kw">INNER JOIN</span> <span class="tbl">Courses</span> c
-    <span class="kw">ON</span> s.student_id <span class="kw">=</span> c.student_id
-<span class="kw">ORDER BY</span> s.student_id <span class="kw">ASC</span>;
+  <!-- Problem 3 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔢</div>
+      <div>
+        <div class="card-title">مسألة 3 — CDF مختلطة ومطلوب احتمالات</div>
+        <div class="card-subtitle">قراءة CDF وإيجاد PDF</div>
+      </div>
     </div>
-
-    <div class="rtbl-wrap">
-      <p style="color:var(--text2);font-size:.88rem;margin-bottom:.5rem">✅ نتيجة الاستعلام المتوقعة:</p>
-      <table class="rtbl">
-        <thead><tr><th>student_name</th><th>course_name</th></tr></thead>
-        <tbody>
-          <tr><td>Ali</td><td>Database</td></tr>
-          <tr><td>Ali</td><td>Programming</td></tr>
-          <tr><td>Sara</td><td>Networks</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="info">
-      <strong>ملاحظة:</strong> الطالب <strong>Omar (student_id=3)</strong> لا يظهر في النتيجة لأنه لا يوجد له كورس في جدول Courses (لا يوجد تطابق في JOIN). الطالب Ali يظهر مرتين لأنه مسجل في كورسين.
-    </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════
-     SECTION 3 – QUIZ 2A (Fishing License)
-════════════════════════════════════════════ -->
-<section class="section" id="q2a">
-  <div class="sec-header">
-    <div class="sec-badge">كويز 2 – أ</div>
-    <h2>ارسم مخطط ER من نموذج رخصة الصيد (Gaza Fishing License)</h2>
-  </div>
-
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">س</span>من خلال النموذج ارسم مخطط ER</div>
-
-    <div class="info" style="margin-bottom:1rem">
-      <strong>تحليل النموذج:</strong><br>
-      يحتوي النموذج على قسمَين: <strong>الصيادون التجاريون (Commercial Fishers)</strong> و<strong>الصيادون الرياضيون (Sport Fishers)</strong>، مما يشير إلى استخدام <strong>التخصص (Specialization / ISA)</strong> في مخطط ER.
-    </div>
-
-    <div class="diagram">
-      <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Tahoma,sans-serif" font-size="12">
-
-        <!-- ── Attributes of FISHER (top) ── -->
-        <!-- LicenseNo (key) -->
-        <ellipse cx="80" cy="55" rx="72" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="2.2"/>
-        <text x="80" y="59" text-anchor="middle" font-size="11" fill="#78350f">LicenseNo</text>
-        <line x1="18" y1="65" x2="142" y2="65" stroke="#78350f" stroke-width="1.5"/>
-        <line x1="80" y1="81" x2="200" y2="140" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Name -->
-        <ellipse cx="240" cy="40" rx="52" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="240" y="44" text-anchor="middle" font-size="11" fill="#78350f">Name</text>
-        <line x1="240" y1="64" x2="280" y2="145" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Season -->
-        <ellipse cx="390" cy="30" rx="52" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="390" y="34" text-anchor="middle" font-size="11" fill="#78350f">Season</text>
-        <line x1="390" y1="54" x2="380" y2="145" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Street -->
-        <ellipse cx="550" cy="30" rx="50" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="550" y="34" text-anchor="middle" font-size="11" fill="#78350f">Street</text>
-        <line x1="550" y1="54" x2="480" y2="145" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- City -->
-        <ellipse cx="700" cy="40" rx="44" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="700" y="44" text-anchor="middle" font-size="11" fill="#78350f">City</text>
-        <line x1="700" y1="64" x2="560" y2="145" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- State -->
-        <ellipse cx="800" cy="80" rx="44" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="800" y="84" text-anchor="middle" font-size="11" fill="#78350f">State</text>
-        <line x1="782" y1="100" x2="620" y2="155" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Tel -->
-        <ellipse cx="840" cy="160" rx="44" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="840" y="164" text-anchor="middle" font-size="11" fill="#78350f">Tel</text>
-        <line x1="796" y1="162" x2="660" y2="175" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── Entity: FISHER ── -->
-        <rect x="200" y="145" width="260" height="55" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5" rx="4"/>
-        <text x="330" y="179" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">FISHER</text>
-
-        <!-- ── ISA Triangle ── -->
-        <line x1="330" y1="200" x2="330" y2="240" stroke="#64748b" stroke-width="2"/>
-        <!-- Triangle: top(330,240) left(270,300) right(390,300) -->
-        <polygon points="330,240 270,300 390,300" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2"/>
-        <text x="330" y="278" text-anchor="middle" font-size="12" fill="#6b21a8" font-weight="bold">ISA</text>
-
-        <!-- Lines from triangle to subtypes -->
-        <line x1="270" y1="300" x2="170" y2="380" stroke="#64748b" stroke-width="2"/>
-        <line x1="390" y1="300" x2="490" y2="380" stroke="#64748b" stroke-width="2"/>
-
-        <!-- ── COMMERCIAL_FISHER ── -->
-        <rect x="30" y="380" width="260" height="55" fill="#dcfce7" stroke="#15803d" stroke-width="2.2" rx="4"/>
-        <text x="160" y="414" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">COMMERCIAL_FISHER</text>
-
-        <!-- Commercial attributes -->
-        <ellipse cx="30" cy="485" rx="68" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="30" y="489" text-anchor="middle" font-size="11" fill="#78350f">VesselNumber</text>
-        <line x1="30" y1="461" x2="80" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <ellipse cx="130" cy="500" rx="68" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="130" y="504" text-anchor="middle" font-size="11" fill="#78350f">VesselName</text>
-        <line x1="130" y1="476" x2="140" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <ellipse cx="230" cy="500" rx="68" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="230" y="504" text-anchor="middle" font-size="11" fill="#78350f">VesselType</text>
-        <line x1="230" y1="476" x2="200" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <ellipse cx="330" cy="490" rx="48" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="330" y="494" text-anchor="middle" font-size="11" fill="#78350f">TaxID</text>
-        <line x1="303" y1="475" x2="260" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── SPORT_FISHER ── -->
-        <rect x="370" y="380" width="220" height="55" fill="#dcfce7" stroke="#15803d" stroke-width="2.2" rx="4"/>
-        <text x="480" y="414" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">SPORT_FISHER</text>
-
-        <!-- Sport attributes -->
-        <ellipse cx="400" cy="500" rx="90" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="400" y="504" text-anchor="middle" font-size="11" fill="#78350f">NumYearsAtAddress</text>
-        <line x1="400" y1="476" x2="430" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <ellipse cx="570" cy="490" rx="105" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="570" y="494" text-anchor="middle" font-size="11" fill="#78350f">PriorYearLicenseNumber</text>
-        <line x1="500" y1="480" x2="520" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Legend -->
-        <rect x="10" y="580" width="14" height="14" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" rx="2"/>
-        <text x="30" y="591" font-size="11" fill="#64748b">Entity (كيان)</text>
-        <ellipse cx="170" cy="587" rx="22" ry="10" fill="#fef9c3" stroke="#92400e" stroke-width="1.5"/>
-        <text x="170" y="591" text-anchor="middle" font-size="11" fill="#64748b"> </text>
-        <text x="198" y="591" font-size="11" fill="#64748b">Attribute (صفة)</text>
-        <polygon points="350,595 330,578 370,578" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.5"/>
-        <text x="378" y="591" font-size="11" fill="#64748b">ISA (تخصص)</text>
-        <text x="520" y="591" font-size="11" fill="#78350f" text-decoration="underline">Underline</text>
-        <text x="598" y="591" font-size="11" fill="#64748b">= Key (مفتاح)</text>
-      </svg>
-    </div>
-
-    <div class="info">
-      <strong>شرح المخطط:</strong><br>
-      • الكيان العام <strong>FISHER</strong> يحتوي على الصفات المشتركة: LicenseNo (مفتاح أساسي)، Name، Season، Street، City، State، Tel.<br>
-      • علاقة <strong>ISA (التخصص)</strong> تقسّم الصيادين إلى نوعين:<br>
-      &nbsp;&nbsp;– <strong>COMMERCIAL_FISHER</strong>: VesselNumber، VesselName، VesselType، TaxID.<br>
-      &nbsp;&nbsp;– <strong>SPORT_FISHER</strong>: NumYearsAtAddress، PriorYearLicenseNumber.
+    <div class="card-body">
+      <div style="background:rgba(224,90,90,0.07);border:1px solid rgba(224,90,90,0.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+        <p style="font-size:.7rem;color:var(--red);letter-spacing:2px;font-weight:700;margin-bottom:8px;">نص المسألة</p>
+        <p style="font-size:.88rem;line-height:1.8;direction:ltr;text-align:left;">
+          F_X(x) = { 0 (x&lt;0), (x+2)/4 (0≤x&lt;1), 3/4 (1≤x&lt;2), 1 (x≥2) }<br><br>
+          (a) أحسب: P{X=0}, P{X≤0}, P{X≥0}, P{1/2&lt;X&lt;3/2}, P{X=1}, P{X&gt;1}, P{X=2}, P{1≤X&lt;2}<br>
+          (b) أوجد pdf.
+        </p>
+      </div>
+      <button class="solution-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> عرض الحل</button>
+      <div class="solution-body">
+        <div class="step">
+          <div class="step-num">تحليل</div>
+          <div class="step-content">
+            هذا متغير مختلط: مستمر في [0,1) وقفزة عند x=1 وقفزة عند x=2.
+            <div class="math-line">
+              F(0⁻) = 0 &nbsp;|&nbsp; F(0) = 2/4 = 1/2 &nbsp;← قفزة عند 0 بمقدار 1/2<br>
+              F(1⁻) = (1+2)/4 = 3/4 &nbsp;|&nbsp; F(1) = 3/4 &nbsp;← لا قفزة عند 1<br>
+              F(2⁻) = 3/4 &nbsp;|&nbsp; F(2) = 1 &nbsp;← قفزة عند 2 بمقدار 1/4
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">a</div>
+          <div class="step-content">
+            <div class="math-line">
+              P{X=0} = F(0) − F(0⁻) = 1/2 − 0 = <strong>1/2</strong><br>
+              P{X≤0} = F(0) = <strong>1/2</strong><br>
+              P{X≥0} = 1 − F(0⁻) = 1 − 0 = <strong>1</strong><br>
+              P{1/2 &lt; X &lt; 3/2} = F(3/2) − F(1/2) = 3/4 − (1/2+2)/4 = 3/4 − 5/8 = <strong>1/8</strong><br>
+              P{X=1} = F(1) − F(1⁻) = 3/4 − 3/4 = <strong>0</strong><br>
+              P{X>1} = 1 − F(1) = 1 − 3/4 = <strong>1/4</strong><br>
+              P{X=2} = F(2) − F(2⁻) = 1 − 3/4 = <strong>1/4</strong><br>
+              P{1≤X&lt;2} = F(2⁻) − F(1⁻) = 3/4 − 3/4 = <strong>0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">b</div>
+          <div class="step-content">
+            الـ PDF = مشتقة الـ CDF:
+            <div class="math-line">
+              f_X(x) = (1/2)δ(x) + (1/4) على [0,1) + (1/4)δ(x−2)
+            </div>
+            في [0,1): المشتقة = d/dx · (x+2)/4 = 1/4
+          </div>
+        </div>
+        <div class="answer-box">
+          <strong>تفسير:</strong> عند x=0 هناك كتلة 1/2 (متقطع)، وفي الفترة [0,1) الكثافة = 1/4 (مستمر)، وعند x=2 كتلة 1/4 (متقطع).
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-
-<!-- ═══════════════════════════════════════════
-     SECTION 4 – QUIZ 2B (Company Materials)
-════════════════════════════════════════════ -->
-<section class="section" id="q2b">
-  <div class="sec-header">
-    <div class="sec-badge">كويز 2 – ب</div>
-    <h2>ارسم مخطط ER لنظام مواد الشركة</h2>
-  </div>
-
-  <div class="qcard">
-    <div class="qtitle"><span class="qnum">س</span>مخطط ER لتصنيف مواد الشركة (مصنّعة محلياً / مشتراة)</div>
-
-    <div class="info" style="margin-bottom:1rem">
-      <strong>تحليل النص:</strong><br>
-      • المواد تنقسم إلى نوعين: <strong>مصنّعة محلياً</strong> و<strong>مشتراة من خارج الشركة</strong> → تخصص (ISA) منفصل (Disjoint).<br>
-      • المواد المشتراة ترتبط بـ<strong>مورّد (Supplier)</strong> بسعر معين (علاقة SUPPLIES بصفة Price).<br>
-      • الصفات المشتركة: رقم المادة (PK)، اسم المادة، الكمية.
+  <!-- Problem 4 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">✏️</div>
+      <div>
+        <div class="card-title">مسألة 4 — إيجاد ثابت من شرط التطبيع</div>
+        <div class="card-subtitle">خاصية ∫f(x)dx = 1</div>
+      </div>
     </div>
-
-    <div class="diagram">
-      <svg viewBox="0 0 920 580" xmlns="http://www.w3.org/2000/svg" font-family="Arial,Tahoma,sans-serif" font-size="12">
-
-        <!-- ── MATERIAL attributes ── -->
-        <!-- MaterialNumber (key) -->
-        <ellipse cx="160" cy="50" rx="85" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="2.2"/>
-        <text x="160" y="55" text-anchor="middle" font-size="12" fill="#78350f">MaterialNumber</text>
-        <line x1="85" y1="62" x2="235" y2="62" stroke="#78350f" stroke-width="1.5"/>
-        <line x1="160" y1="76" x2="280" y2="140" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- MaterialName -->
-        <ellipse cx="380" cy="40" rx="72" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="380" y="45" text-anchor="middle" font-size="12" fill="#78350f">MaterialName</text>
-        <line x1="380" y1="66" x2="370" y2="140" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Quantity -->
-        <ellipse cx="560" cy="50" rx="60" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="560" y="55" text-anchor="middle" font-size="12" fill="#78350f">Quantity</text>
-        <line x1="560" y1="76" x2="460" y2="140" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── Entity: MATERIAL ── -->
-        <rect x="230" y="140" width="240" height="55" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5" rx="4"/>
-        <text x="350" y="173" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e3a8a">MATERIAL</text>
-
-        <!-- ── ISA Triangle (d = disjoint) ── -->
-        <line x1="350" y1="195" x2="350" y2="235" stroke="#64748b" stroke-width="2"/>
-        <polygon points="350,235 285,300 415,300" fill="#f3e8ff" stroke="#7e22ce" stroke-width="2"/>
-        <text x="350" y="272" text-anchor="middle" font-size="12" fill="#6b21a8" font-weight="bold">ISA</text>
-        <circle cx="350" cy="252" r="12" fill="none" stroke="#7e22ce" stroke-width="1.5"/>
-        <text x="350" y="257" text-anchor="middle" font-size="11" fill="#7e22ce" font-weight="bold">d</text>
-
-        <!-- Lines to subtypes -->
-        <line x1="285" y1="300" x2="170" y2="380" stroke="#64748b" stroke-width="2"/>
-        <line x1="415" y1="300" x2="530" y2="380" stroke="#64748b" stroke-width="2"/>
-
-        <!-- ── LOCALLY_MANUFACTURED ── -->
-        <rect x="30" y="380" width="260" height="55" fill="#dcfce7" stroke="#15803d" stroke-width="2.2" rx="4"/>
-        <text x="160" y="413" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">LOCALLY_MANUFACTURED</text>
-
-        <!-- ProductionLineNumber -->
-        <ellipse cx="160" cy="490" rx="105" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="160" y="495" text-anchor="middle" font-size="12" fill="#78350f">ProductionLineNumber</text>
-        <line x1="160" y1="464" x2="160" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── PURCHASED ── -->
-        <rect x="400" y="380" width="200" height="55" fill="#dcfce7" stroke="#15803d" stroke-width="2.2" rx="4"/>
-        <text x="500" y="413" text-anchor="middle" font-size="13" font-weight="bold" fill="#14532d">PURCHASED</text>
-
-        <!-- Country -->
-        <ellipse cx="420" cy="490" rx="52" ry="26" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="420" y="495" text-anchor="middle" font-size="12" fill="#78350f">Country</text>
-        <line x1="420" y1="464" x2="460" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── SUPPLIES Relationship (diamond) ── -->
-        <!-- Line from PURCHASED to SUPPLIES -->
-        <line x1="600" y1="407" x2="700" y2="407" stroke="#64748b" stroke-width="2"/>
-        <text x="648" y="398" text-anchor="middle" font-size="10" fill="#64748b">1</text>
-        <!-- Diamond at (730, 407) -->
-        <polygon points="730,383 760,407 730,431 700,407" fill="#fde68a" stroke="#b45309" stroke-width="2"/>
-        <text x="730" y="412" text-anchor="middle" font-size="12" fill="#92400e" font-weight="bold">SUPPLIES</text>
-        <!-- Line from SUPPLIES to SUPPLIER -->
-        <line x1="760" y1="407" x2="840" y2="407" stroke="#64748b" stroke-width="2"/>
-        <text x="798" y="398" text-anchor="middle" font-size="10" fill="#64748b">N</text>
-
-        <!-- Price attribute on SUPPLIES -->
-        <ellipse cx="730" cy="480" rx="42" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="1.8"/>
-        <text x="730" y="484" text-anchor="middle" font-size="12" fill="#78350f">Price</text>
-        <line x1="730" y1="431" x2="730" y2="456" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- ── SUPPLIER Entity ── -->
-        <rect x="840" y="380" width="70" height="55" fill="#dbeafe" stroke="#1e40af" stroke-width="2.5" rx="4"/>
-        <text x="875" y="413" text-anchor="middle" font-size="13" font-weight="bold" fill="#1e3a8a">SUPPLIER</text>
-
-        <!-- SupplierID (key) -->
-        <ellipse cx="875" cy="490" rx="55" ry="24" fill="#fef9c3" stroke="#92400e" stroke-width="2"/>
-        <text x="875" y="494" text-anchor="middle" font-size="11" fill="#78350f">SupplierID</text>
-        <line x1="826" y1="500" x2="924" y2="500" stroke="#78350f" stroke-width="1.5"/>
-        <line x1="875" y1="466" x2="875" y2="435" stroke="#64748b" stroke-width="1.5"/>
-
-        <!-- Legend -->
-        <rect x="10" y="548" width="14" height="14" fill="#dbeafe" stroke="#1e40af" stroke-width="1.5" rx="2"/>
-        <text x="30" y="559" font-size="11" fill="#64748b">Entity</text>
-        <ellipse cx="110" cy="555" rx="22" ry="10" fill="#fef9c3" stroke="#92400e" stroke-width="1.5"/>
-        <text x="138" y="559" font-size="11" fill="#64748b">Attribute</text>
-        <polygon points="230,560 250,548 270,560 250,572" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>
-        <text x="278" y="559" font-size="11" fill="#64748b">Relationship</text>
-        <polygon points="380,562 360,548 380,535 400,548" fill="#f3e8ff" stroke="#7e22ce" stroke-width="1.5"/>
-        <text x="406" y="559" font-size="11" fill="#64748b">ISA (d=disjoint)</text>
-        <text x="570" y="559" font-size="11" fill="#78350f" text-decoration="underline">Underline</text>
-        <text x="642" y="559" font-size="11" fill="#64748b">= Key</text>
-      </svg>
-    </div>
-
-    <div class="info">
-      <strong>شرح المخطط:</strong><br>
-      • الكيان العام <strong>MATERIAL</strong>: MaterialNumber (مفتاح)، MaterialName، Quantity.<br>
-      • <strong>ISA (d)</strong> – disjoint: المادة إما مصنّعة أو مشتراة، وليس كلاهما.<br>
-      • <strong>LOCALLY_MANUFACTURED</strong>: صفة إضافية = ProductionLineNumber (رقم خط الإنتاج).<br>
-      • <strong>PURCHASED</strong>: صفة إضافية = Country (بلد المنشأ)، وترتبط بـ<strong>SUPPLIER</strong> عبر علاقة <strong>SUPPLIES</strong> بصفة Price.<br>
-      • العلاقة SUPPLIES: كيان SUPPLIER واحد يُورّد مواداً متعددة (1:N).
+    <div class="card-body">
+      <div style="background:rgba(224,90,90,0.07);border:1px solid rgba(224,90,90,0.2);border-radius:8px;padding:16px;margin-bottom:14px;">
+        <p style="font-size:.7rem;color:var(--red);letter-spacing:2px;font-weight:700;margin-bottom:8px;">نص المسألة</p>
+        <p style="font-size:.88rem;line-height:1.8;direction:ltr;text-align:left;">
+          f_X(x) = { 2a−2x (0&lt;x&lt;a), (2/3)(x−a) (a≤x&lt;4a), 0 otherwise }<br>
+          (a) Find a. &nbsp; (b) Find P{1/2 &lt; X ≤ 3/2}.
+        </p>
+      </div>
+      <button class="solution-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> عرض الحل</button>
+      <div class="solution-body">
+        <div class="step">
+          <div class="step-num">a</div>
+          <div class="step-content">
+            شرط التطبيع: ∫f(x)dx = 1
+            <div class="math-line">
+              ∫₀ᵃ (2a−2x)dx + ∫ₐ⁴ᵃ (2/3)(x−a)dx = 1
+            </div>
+            الجزء الأول:
+            <div class="math-line">∫₀ᵃ (2a−2x)dx = [2ax − x²]₀ᵃ = 2a² − a² = a²</div>
+            الجزء الثاني:
+            <div class="math-line">
+              ∫ₐ⁴ᵃ (2/3)(x−a)dx = (2/3)[(x−a)²/2]ₐ⁴ᵃ = (2/3)·(3a)²/2 = (2/3)·9a²/2 = 3a²
+            </div>
+            إذاً:
+            <div class="math-line">a² + 3a² = 1 → 4a² = 1 → a = 1/2</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">b</div>
+          <div class="step-content">
+            بعد a = 1/2: النطاقات هي (0, 1/2) و[1/2, 2) و0 خلاف ذلك<br>
+            P{1/2 &lt; X ≤ 3/2} = ∫_{1/2}^{3/2} f(x)dx<br>
+            ملاحظة: في [1/2, 2) الدالة = (2/3)(x − 1/2)
+            <div class="math-line">
+              = ∫_{1/2}^{3/2} (2/3)(x − 1/2)dx = (2/3)·[(x−1/2)²/2]_{1/2}^{3/2}
+            </div>
+            <div class="math-line">
+              = (2/3)·[(1)²/2 − 0] = (2/3)·(1/2) = 1/3
+            </div>
+          </div>
+        </div>
+        <div class="answer-box">
+          <strong>الجواب:</strong> a = 1/2 &nbsp; و &nbsp; P{1/2 &lt; X ≤ 3/2} = 1/3
+        </div>
+      </div>
     </div>
   </div>
-</section>
 
-<footer style="text-align:center;padding:2rem;color:var(--text2);font-size:.85rem;border-top:1px solid var(--border);margin-top:1rem">
-  قواعد البيانات العلائقية – Relational Databases &nbsp;|&nbsp; 2025-2026
-  &nbsp;|&nbsp; م.م. مصطفى لطيف &amp; م.م. سعاد محمد
-</footer>
+</div><!-- end problems -->
+
+</main>
 
 <script>
-function show(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+// === NAV ===
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{ drawCharts(); if(window.MathJax) MathJax.typesetPromise(); }, 50);
 }
 
-function copyCode(btn) {
-  const block = btn.parentElement;
-  const text = block.innerText.replace('نسخ','').trim();
-  navigator.clipboard.writeText(text).then(() => {
-    btn.textContent = '✔ تم النسخ';
-    setTimeout(() => btn.textContent = 'نسخ', 2000);
-  });
+function toggleSol(btn) {
+  const body = btn.nextElementSibling;
+  const open = body.classList.contains('show');
+  body.classList.toggle('show');
+  btn.classList.toggle('open');
+  btn.querySelector('.arrow').textContent = open ? '▶' : '▼';
+  btn.childNodes[1].textContent = open ? ' عرض الحل' : ' إخفاء الحل';
+  if(!open && window.MathJax) MathJax.typesetPromise([body]);
 }
+
+// === CHART HELPERS ===
+const GOLD='#c9a227', ACCENT='#4a9eff', GREEN='#4caf84', RED='#e05a5a', PURPLE='#a78bfa';
+const BG='rgba(255,255,255,0.03)', GRID='rgba(201,162,39,0.12)', TEXTC='rgba(232,220,200,0.7)';
+
+function setupCanvas(canvas) {
+  const dpr = window.devicePixelRatio||1;
+  const rect = canvas.getBoundingClientRect();
+  const w = canvas.offsetWidth||canvas.width;
+  const h = canvas.height;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  canvas.style.width = w+'px'; canvas.style.height = h+'px';
+  return {ctx, w, h};
+}
+
+function drawAxes(ctx, ox, oy, w, h, xLabel, yLabel) {
+  ctx.strokeStyle = 'rgba(232,220,200,0.3)';
+  ctx.lineWidth = 1;
+  // grid lines
+  ctx.setLineDash([2,4]);
+  for(let i=0;i<5;i++){
+    const y = oy - (i/4)*(oy-10);
+    ctx.beginPath(); ctx.moveTo(ox,y); ctx.lineTo(w-15,y); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  // axes
+  ctx.strokeStyle = 'rgba(232,220,200,0.6)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(ox,5); ctx.lineTo(ox,oy+5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox-5,oy); ctx.lineTo(w-10,oy); ctx.stroke();
+  // labels
+  ctx.fillStyle = TEXTC; ctx.font = '11px Cairo';
+  ctx.fillText(xLabel||'k', w-18, oy+4);
+  ctx.fillText(yLabel||'p', ox+4, 12);
+}
+
+function pmfBar(ctx, x, y0, yTop, color, dotColor) {
+  ctx.strokeStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,yTop); ctx.stroke();
+  ctx.fillStyle = dotColor||color;
+  ctx.beginPath(); ctx.arc(x,yTop,3.5,0,Math.PI*2); ctx.fill();
+}
+
+let chartsDrawn = false;
+function drawCharts() {
+  if(chartsDrawn) return;
+  // PMF Chart 1 — Y1 uniform 0-7
+  const c1 = document.getElementById('pmfChart1');
+  if(c1 && c1.offsetWidth>0) {
+    const {ctx,w,h} = setupCanvas(c1);
+    const ox=40, oy=h-30, chartW=w-60, chartH=oy-20;
+    const vals=[0,1,2,3,4,5,6,7];
+    const probs=[1/8,1/8,1/8,1/8,1/8,1/8,1/8,1/8];
+    ctx.fillStyle='transparent';
+    drawAxes(ctx,ox,oy,w,h);
+    vals.forEach((v,i)=>{
+      const x=ox+((v+0.5)/8.5)*chartW;
+      const yTop=oy-probs[i]*chartH*4;
+      pmfBar(ctx,x,oy,yTop,ACCENT);
+      ctx.fillStyle=TEXTC; ctx.font='10px Cairo';
+      ctx.textAlign='center'; ctx.fillText(v,x,oy+14);
+    });
+    // y labels
+    ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='right';
+    ['1/8','2/8','3/8','4/8'].forEach((l,i)=>{
+      const y=oy-((i+1)/4)*chartH; ctx.fillText(l,ox-4,y+4);
+    });
+  }
+
+  // PMF Chart 2 — Y2 number of tails
+  const c2 = document.getElementById('pmfChart2');
+  if(c2 && c2.offsetWidth>0) {
+    const {ctx,w,h} = setupCanvas(c2);
+    const ox=40, oy=h-30, chartW=w-60, chartH=oy-20;
+    const vals=[0,1,2,3]; const probs=[1/8,3/8,3/8,1/8];
+    drawAxes(ctx,ox,oy,w,h);
+    vals.forEach((v,i)=>{
+      const x=ox+((v+1)/5.5)*chartW;
+      const yTop=oy-probs[i]*chartH*2.5;
+      pmfBar(ctx,x,oy,yTop,GREEN);
+      ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='center'; ctx.fillText(v,x,oy+14);
+    });
+    ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='right';
+    ['1/8','2/8','3/8','4/8'].forEach((l,i)=>{
+      const y=oy-((i+1)/4)*chartH; ctx.fillText(l,ox-4,y+4);
+    });
+  }
+
+  // CDF Chart — Y2
+  const cc = document.getElementById('cdfChart');
+  if(cc && cc.offsetWidth>0) {
+    const {ctx,w,h} = setupCanvas(cc);
+    const ox=45, oy=h-35, chartW=w-65, chartH=oy-25;
+    drawAxes(ctx,ox,oy,w,h);
+    // pmf bars
+    const vals=[0,1,2,3]; const probs=[1/8,3/8,3/8,1/8];
+    vals.forEach((v,i)=>{
+      const x=ox+((v+1)/5)*chartW;
+      pmfBar(ctx,x,oy,oy-probs[i]*chartH*2.5,ACCENT);
+      ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='center'; ctx.fillText(v,x,oy+14);
+    });
+    // CDF step
+    const cumul=[0,1/8,4/8,7/8,1];
+    const xs=[-0.5,0,1,2,3,4].map(v=>ox+((v+1)/5)*chartW);
+    ctx.strokeStyle=RED; ctx.lineWidth=2.5; ctx.setLineDash([]);
+    const xPos=[ox-10, ox+((0+1)/5)*chartW, ox+((1+1)/5)*chartW, ox+((2+1)/5)*chartW, ox+((3+1)/5)*chartW, w-15];
+    const yPos=[oy, oy, oy-cumul[1]*chartH, oy-cumul[2]*chartH, oy-cumul[3]*chartH, oy-chartH];
+    // draw staircase
+    const steps=[
+      {x1:ox-10,x2:xPos[1],y:oy},
+      {x1:xPos[1],x2:xPos[2],y:yPos[2]},
+      {x1:xPos[2],x2:xPos[3],y:yPos[3]},
+      {x1:xPos[3],x2:xPos[4],y:yPos[4]},
+      {x1:xPos[4],x2:w-10,y:oy-chartH}
+    ];
+    steps.forEach(s=>{
+      ctx.beginPath(); ctx.moveTo(s.x1,s.y); ctx.lineTo(s.x2,s.y); ctx.stroke();
+    });
+    // jumps (open/closed dots)
+    const jumpX=[xPos[1],xPos[2],xPos[3],xPos[4]];
+    const fromY=[oy,yPos[2],yPos[3],yPos[4]];
+    const toY=[yPos[2],yPos[3],yPos[4],oy-chartH];
+    jumpX.forEach((x,i)=>{
+      // vertical jump
+      ctx.beginPath(); ctx.moveTo(x,fromY[i]); ctx.lineTo(x,toY[i]); ctx.stroke();
+      // open circle below
+      ctx.strokeStyle=RED; ctx.lineWidth=2; ctx.fillStyle='#1a2744';
+      ctx.beginPath(); ctx.arc(x,fromY[i],4,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      // closed dot above
+      ctx.fillStyle=RED;
+      ctx.beginPath(); ctx.arc(x,toY[i],4,0,Math.PI*2); ctx.fill();
+      ctx.strokeStyle=RED; ctx.lineWidth=2.5;
+    });
+    // y labels
+    ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='right';
+    ['1/8','4/8','7/8','1'].forEach((l,i)=>{
+      const cum=[1/8,4/8,7/8,1];
+      ctx.fillText(l,ox-4,oy-cum[i]*chartH+4);
+    });
+  }
+
+  // PDF Chart — Uniform [1,10]
+  const cp = document.getElementById('pdfChart');
+  if(cp && cp.offsetWidth>0) {
+    const {ctx,w,h} = setupCanvas(cp);
+    const ox=45, oy=h-30, chartW=w-60, chartH=oy-20;
+    drawAxes(ctx,ox,oy,w,h);
+    const toX = v => ox + ((v+1)/12)*chartW;
+    const toY = v => oy - v*chartH;
+    // CDF line (blue)
+    ctx.strokeStyle=ACCENT; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(ox-10,oy); ctx.lineTo(toX(1),oy);
+    ctx.lineTo(toX(10),toY(1));
+    ctx.lineTo(w-10,toY(1));
+    ctx.stroke();
+    // PDF line (green)
+    ctx.strokeStyle=GREEN; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    ctx.moveTo(ox-10,oy); ctx.lineTo(toX(1),oy);
+    ctx.lineTo(toX(1),toY(1/9));
+    ctx.lineTo(toX(10),toY(1/9));
+    ctx.lineTo(toX(10),oy);
+    ctx.lineTo(w-10,oy);
+    ctx.stroke();
+    // fill PDF
+    ctx.fillStyle='rgba(76,175,132,0.1)';
+    ctx.beginPath();
+    ctx.moveTo(toX(1),oy); ctx.lineTo(toX(1),toY(1/9)); ctx.lineTo(toX(10),toY(1/9)); ctx.lineTo(toX(10),oy);
+    ctx.closePath(); ctx.fill();
+    // x labels
+    ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='center';
+    ctx.fillText('1',toX(1),oy+14); ctx.fillText('10',toX(10),oy+14);
+    // y labels
+    ctx.fillStyle=ACCENT; ctx.textAlign='right';
+    ctx.fillText('1',ox-4,toY(1)+4);
+    ctx.fillStyle=GREEN;
+    ctx.fillText('1/9',ox-4,toY(1/9)+4);
+    // legend
+    ctx.font='11px Cairo'; ctx.textAlign='left';
+    ctx.fillStyle=ACCENT; ctx.fillRect(w-90,25,20,3); ctx.fillText('F_X(x)',w-65,30);
+    ctx.fillStyle=GREEN; ctx.fillRect(w-90,40,20,3); ctx.fillText('f_X(x)',w-65,45);
+  }
+
+  // Mixed Chart
+  const cm = document.getElementById('mixedChart');
+  if(cm && cm.offsetWidth>0) {
+    const {ctx,w,h} = setupCanvas(cm);
+    const ox=45, oy=h-35, chartW=w-60, chartH=oy-20;
+    drawAxes(ctx,ox,oy,w,h);
+    const toX = v => ox+((v+1)/9)*chartW;
+    const toY = v => oy - v*chartH;
+    // CDF (red)
+    ctx.strokeStyle=RED; ctx.lineWidth=2.5;
+    // y<0: 0
+    ctx.beginPath(); ctx.moveTo(ox-10,oy); ctx.lineTo(toX(0),oy); ctx.stroke();
+    // jump at 0
+    ctx.beginPath(); ctx.moveTo(toX(0),oy); ctx.lineTo(toX(0),toY(0.5)); ctx.stroke();
+    // 0<=y<=1: stays at 0.5
+    ctx.beginPath(); ctx.moveTo(toX(0),toY(0.5)); ctx.lineTo(toX(1),toY(0.5)); ctx.stroke();
+    // 1<y<=6: (y+4)/10
+    ctx.beginPath(); ctx.moveTo(toX(1),toY(0.5));
+    for(let y=1;y<=6;y+=0.1) { ctx.lineTo(toX(y),toY((y+4)/10)); }
+    ctx.stroke();
+    // y>6: 1
+    ctx.beginPath(); ctx.moveTo(toX(6),toY(1)); ctx.lineTo(w-10,toY(1)); ctx.stroke();
+    // open/closed dots
+    ctx.fillStyle='#1a2744'; ctx.strokeStyle=RED; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(toX(0),oy,4,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle=RED;
+    ctx.beginPath(); ctx.arc(toX(0),toY(0.5),4,0,Math.PI*2); ctx.fill();
+    // PDF — spike at 0 then flat 1/10
+    // spike
+    ctx.strokeStyle=PURPLE; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(toX(0),oy); ctx.lineTo(toX(0),toY(0.65)); ctx.stroke();
+    ctx.fillStyle=PURPLE;
+    ctx.beginPath();
+    ctx.moveTo(toX(0),toY(0.65));
+    ctx.lineTo(toX(0)-5,toY(0.55)); ctx.lineTo(toX(0)+5,toY(0.55));
+    ctx.closePath(); ctx.fill();
+    // flat 1/10
+    ctx.strokeStyle=GREEN; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(toX(0),oy); ctx.lineTo(toX(1),oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toX(1),oy); ctx.lineTo(toX(1),toY(0.1)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toX(1),toY(0.1)); ctx.lineTo(toX(6),toY(0.1)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toX(6),toY(0.1)); ctx.lineTo(toX(6),oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(toX(6),oy); ctx.lineTo(w-10,oy); ctx.stroke();
+    ctx.fillStyle='rgba(76,175,132,0.1)';
+    ctx.fillRect(toX(1),toY(0.1),toX(6)-toX(1),toY(0.1)-oy<0?oy-toY(0.1):0);
+    // x labels
+    ctx.fillStyle=TEXTC; ctx.font='10px Cairo'; ctx.textAlign='center';
+    [0,1,6].forEach(v=>ctx.fillText(v,toX(v),oy+14));
+    // y labels
+    ctx.textAlign='right';
+    ['0.5','1'].forEach((l,i)=>{ const yv=[0.5,1]; ctx.fillText(l,ox-4,toY(yv[i])+4); });
+    // legend
+    ctx.font='10px Cairo'; ctx.textAlign='left';
+    ctx.fillStyle=RED; ctx.fillText('F_Y(y)',w-100,22);
+    ctx.fillStyle=GREEN; ctx.fillText('f_Y(y)',w-100,38);
+    ctx.fillStyle=PURPLE; ctx.fillText('½δ(y)',w-100,54);
+  }
+
+  chartsDrawn = true;
+}
+
+window.addEventListener('load', ()=>{
+  setTimeout(drawCharts, 300);
+  if(window.MathJax) MathJax.typesetPromise();
+});
+window.addEventListener('resize', ()=>{ chartsDrawn=false; drawCharts(); });
 </script>
 </body>
 </html>
